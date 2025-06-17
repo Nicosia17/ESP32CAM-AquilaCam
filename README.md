@@ -81,3 +81,5 @@ ESP32CAM-AquilaCam/
 
 Volevo un sistema semplice e smart per tenere d’occhio il mio gatto Aquila quando non sono in casa. 
 Ora posso vedere cosa fa, ricevere aggiornamenti e controllare la stanza in qualsiasi momento, direttamente dallo smartphone.
+
+Made with ❤️ and 🐾 by Nicosia17
