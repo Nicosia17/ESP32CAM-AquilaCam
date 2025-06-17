@@ -1,0 +1,11 @@
+.pio/
+.vscode/
+*.pyc
+*.swp
+*.DS_Store
+*.bak
+*.tmp
+*.log
+__pycache__/
+.env
+secrets.h
