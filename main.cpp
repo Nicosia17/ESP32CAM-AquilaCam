@@ -5,13 +5,13 @@
 #include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
 
-// Configurazione Wi-Fi (inserire le proprie credenziali)
-const char* WIFI_SSID = "iliadbox-22751F";
-const char* WIFI_PASSWORD = "h63sdqv4d5qrttmbqskwmz";
+// Configurazione Wi-Fi 
+const char* WIFI_SSID = "Nome Rete Wifi";
+const char* WIFI_PASSWORD = "Password Rete Wifi";
 
-// Configurazione Telegram (inserire il token del bot e l'ID chat autorizzato)
-#define BOT_TOKEN "7346744442:AAHxyePSP1hRC6mPFjYtZAupIl9P7ZeYXT0"
-const String authorizedIds[] = {"201106499", "502192424"};
+// Configurazione Telegram 
+#define BOT_TOKEN "TOKEN BOT"
+const String authorizedIds[] = {"TOKEN ID 1", "TOKEN ID 2"};
 
 // Funzione semplice per verificare autorizzazione
 bool isAuthorized(String chat_id) {
@@ -114,16 +114,13 @@ esp_err_t stream_handler(httpd_req_t *req) {
       // Se c'è un errore, esce dal loop
       break;
     }
-    // Nota: il loop continua finché il client tiene aperta la connessione HTTP
   }
 
   Serial.println("Stream: client disconnesso.");
-  // Termina lo stream inviando il boundary finale (necessario per chiudere correttamente)
   httpd_resp_send_chunk(req, "--FRAME--\r\n", 10);
   return res;
 }
 
-// Handler per la pagina index (facoltativo, fornisce un semplice HTML con stream)
 esp_err_t index_handler(httpd_req_t *req) {
   const char* resp_str = 
     "<!DOCTYPE html><html>"
@@ -151,7 +148,7 @@ esp_err_t index_handler(httpd_req_t *req) {
 void startCameraServer() {
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
   config.server_port = 80;
-  config.ctrl_port = 32768;  // porta di controllo (default 32768)
+  config.ctrl_port = 32768;
 
   if (httpd_start(&stream_httpd, &config) == ESP_OK) {
     // URI per streaming
@@ -278,7 +275,7 @@ bool sendPhotoTelegram(const String& chat_id) {
     }
   }
   client.stop();
-  Serial.println("Risposta Telegram: " + response);  // log della risposta (JSON Telegram)
+  Serial.println("Risposta Telegram: " + response);  
   // Controlla se nell'output c'è "ok":true
   return (response.indexOf("\"ok\":true") != -1);
 }
@@ -292,7 +289,7 @@ void handleNewMessages(int numNewMessages) {
 
     if (bot.messages[i].type == F("callback_query")) {
       // Gestione pressione pulsanti inline
-      String data = bot.messages[i].text;  // il campo text contiene il callback_data
+      String data = bot.messages[i].text;  
       Serial.printf("Callback dal bot: %s\n", data.c_str());
       if (data == "get_photo") {
         // Utente ha premuto "Photo"
@@ -325,7 +322,7 @@ void handleNewMessages(int numNewMessages) {
         // Definisce tastiera inline con pulsanti Photo e Stream
         String keyboardJson = "["
         "[{\"text\":\"📷 Photo\",\"callback_data\":\"get_photo\"},"
-        "{\"text\":\"🔴 Stream\",\"url\":\"http://aquilacam.zapto.org:8080/stream\"}],"
+        "{\"text\":\"🔴 Stream\",\"url\":\"http://NOMESERVIZIO.zapto.org:8080/stream\"}],"
         "[{\"text\":\"🔦 Toggle Flash\",\"callback_data\":\"toggle_flash\"}]""]";    
         bot.sendMessageWithInlineKeyboard(chat_id, welcome, "Markdown", keyboardJson);
       }
@@ -341,7 +338,7 @@ void handleNewMessages(int numNewMessages) {
       else if (text == "/stream") {
         // Comando testuale /stream - risponde con link streaming
         String streamMsg = "🔴 Streaming avviato.\nApri questo link nel browser:\n";
-        streamMsg += "http://aquilacam.zapto.org:8080/stream";  // Usa il tuo hostname
+        streamMsg += "http://NOMESERVIZIO.zapto.org:8080/stream";  // Usa il tuo hostname
         bot.sendMessage(chat_id, streamMsg, "");
       }
       else {
